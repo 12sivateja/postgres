@@ -1,52 +1,73 @@
-# postgres
+# PostgreSQL Setup on a Linux Machine
 
-## Setup of the postgres in the linux machine
+## Step 1: Update Package Lists and Install PostgreSQL
 
-step -1
+```bash
 sudo apt update
 sudo apt install postgresql postgresql-contrib
+```
 
-step - 2
+## step 2 : switching to the PostgreSQL User
+
+```bash
 sudo -i -u postgres
+```
 
-step - 3
+## step 3 : Access the PostgreSQL Promt
+
+```bash
 psql
+```
 
-step -4
+## step 4 : Create New Superuser
+
+```sql
 CREATE USER admin_user WITH SUPERUSER PASSWORD 'your_password';
+```
 
-step -5
+## step 5: create a New Database Owned by the New User
+
+```sql
 CREATE DATABASE my_database OWNER admin_user;
+```
 
-step - 6
+## step 6: Edit the PostgreSQL Authentication Configuration
+
+```bash
 sudo nano /etc/postgresql/15/main/pg_hba.conf
+```
 
-step -7
-`
+## Step 7: Modify Authentication Methods in pg_hba.conf
+
+```text
 # "local" is for Unix domain socket connections only
-
-local all all md5
+local   all             all                                     md5
 
 # IPv4 local connections:
-
-host all all 127.0.0.1/32 md5
+host    all             all             127.0.0.1/32            md5
 
 # IPv6 local connections:
+host    all             all             ::1/128                 md5
+```
 
-host all all ::1/128 md5
-`
+## Step 8: Restart the PostgreSQL Service
 
-step -8
+```bash
 sudo systemctl restart postgresql
+```
 
-step - 9
-psql -U admin -d postgres -W `for the tesing of the admin login`
+## Step 9: Test the Admin User Login
 
-step - 10
+```bash
+psql -U admin -d postgres -W
+```
+
+## Step 10: Create an 'admin' Database
+
+```bash
 sudo -i -u postgres
 psql
-create database admin
-
+CREATE DATABASE admin;
 \q
-
-psql -u admin -d admin - W
+psql -U admin -d admin -W
+```
